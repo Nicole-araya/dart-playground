@@ -34,6 +34,18 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  var favorites = <WordPair>[];
+
+  void toggleFavorite(){
+    if (favorites.contains(current)){
+      favorites.remove(current);
+    } else {
+      favorites.add(current);
+    }
+    notifyListeners();
+  }
+
+
 }
 
 class MyHomePage extends StatelessWidget {
@@ -42,6 +54,12 @@ class MyHomePage extends StatelessWidget {
     var appState = context.watch<MyAppState>();
     var pair = appState.current;
 
+    IconData icon;
+    if (appState.favorites.contains(pair)){
+      icon = Icons.favorite;
+    } else {
+      icon = Icons.favorite_border;
+    }
 
     return Scaffold(
       body: Center(
@@ -51,13 +69,28 @@ class MyHomePage extends StatelessWidget {
              
             BigCard(pair: pair),
             SizedBox(height: 10), // A SizedBox is a box with a specified size. Space between the BigCard and the button.
-            ElevatedButton(
-              onPressed: () {
-                appState.getNext();
-              },
-              child: Text('Next'),
+            Row(
+              mainAxisSize: MainAxisSize.min, // To make the row only as wide as its children
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    appState.toggleFavorite();
+                  },
+                  icon: Icon(icon),
+                  label: Text('Like'),
+                ),
+                
+                SizedBox(width: 10), // Space between the two buttons
+
+                ElevatedButton(
+                  onPressed: () {
+                    appState.getNext();
+                  },
+                  child: Text('Next'),
+                ),
+                
+              ],
             ),
-        
             
             ],
         ),
