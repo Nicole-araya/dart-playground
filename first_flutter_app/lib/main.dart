@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {     // Widgets are the elements from which
       child: MaterialApp(
         title: 'Namer App',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+          colorScheme: ColorScheme.fromSeed(seedColor:  Color.fromRGBO(225, 76, 255, 1)),
         ),
         home: MyHomePage(),
       ),
@@ -40,23 +40,61 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
+    var pair = appState.current;
+
 
     return Scaffold(
-      body: Column(
-        children: [
-          Text('A random AWESOME idea:'), 
-          Text(appState.current.asLowerCase),
-          
-          ElevatedButton(
-            onPressed: () {
-              appState.getNext();
-            },
-            child: Text('Next'),
-          ),
-
-          
-          ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+             
+            BigCard(pair: pair),
+            SizedBox(height: 10), // A SizedBox is a box with a specified size. Space between the BigCard and the button.
+            ElevatedButton(
+              onPressed: () {
+                appState.getNext();
+              },
+              child: Text('Next'),
+            ),
+        
+            
+            ],
+        ),
       ),
     );
+  }
+}
+
+class BigCard extends StatelessWidget {
+  const BigCard({
+    super.key,
+    required this.pair,
+  });
+
+  final WordPair pair;
+
+  @override
+  Widget build(BuildContext context) {
+    
+    final theme = Theme.of(context);     // To get the current theme, we use Theme.of(context). This is a common pattern in Flutter.
+    final style = theme.textTheme.displayMedium!.copyWith(  // We can also use the theme to style our text. 
+      color: theme.colorScheme.onPrimary,
+      
+    );  
+
+    return Card(
+        color: theme.colorScheme.primary,     // We can use the theme to set the color of the card.
+        elevation: 2,   // Shadows
+        child: Padding(                                // Flutter uses Composition over Inheritance whenever it can. 
+          padding: const EdgeInsets.all(20),         // Here, instead of padding being an attribute of Text, it's a widget!
+          child: Text(
+            pair.asLowerCase, 
+            style: style,
+            semanticsLabel: "${pair.first} ${pair.second}", // Using two separate words instead of a compound word makes sure that screen readers identify them appropriately
+
+          ),
+        ),
+      );
   }
 }
