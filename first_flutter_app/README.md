@@ -1,17 +1,13 @@
-# first_flutter_app
+# Your First Flutter App - Codelab
 
-A new Flutter project.
+This repository contains the source code developed while following the official **"Your first Flutter app"** codelab available on [Google Developers Codelabs](https://codelabs.developers.google.com/codelabs/flutter-codelab-first).
 
-## Getting Started
+## Project Description
 
-This project is a starting point for a Flutter application.
+Through this hands-on laboratory, a functional and adaptive mobile application was built to explore the core foundations of Flutter development and the Dart programming language.
 
-A few resources to get you started if this is your first Flutter project:
+As stated in the official codelab specification:
+> *"The application generates cool-sounding names. The user can ask for the next name, favorite the current one, and review the list of favorites names on a separate page. The app is responsive to different screen sizes."*
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+*Educational project developed as part of a multi-platform mobile development learning path.*
