@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {  // This class is private (_)
         page = GeneratorPage();
         break;
       case 1:
-        page = Placeholder();
+        page = FavoritesPage();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {  // This class is private (_)
             children: [
               SafeArea(                   // Ensures that its child is not obscured by a hardware notch or a status bar.
                 child: NavigationRail(
-                  extended: constraints.maxWidth >= 600,      // If it true, shows the labels next to the icons. Or else, it only shows the icons.
+                  extended: constraints.maxWidth >= 600,   // Appears when the screen is wide enough (more o equal 600px). If it true, shows the labels next to the icons. Or else, it only shows the icons. 
                   destinations: [
                     NavigationRailDestination(
                       icon: Icon(Icons.home),
@@ -90,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {  // This class is private (_)
                       label: Text('Favorites'),
                     ),
                   ],
-                  selectedIndex: selectedIndex,                    // A selected index of zero selects the first destination,
+                  selectedIndex: selectedIndex,        // A selected index of zero selects the first destination,
                   onDestinationSelected: (value) {   // this callback is called when the user taps on a destination.
                     setState(() {                     // This is similar to notifyListeners() in MyAppState.
                       selectedIndex = value;
@@ -188,4 +188,35 @@ class BigCard extends StatelessWidget {
         ),
       );
   }
+}
+
+class FavoritesPage extends StatelessWidget{  
+
+  @override
+  Widget build(BuildContext context) {
+
+      var appState = context.watch<MyAppState>();
+      if (appState.favorites.isEmpty) {
+        return Center(
+          child: Text('No favorites yet.'),
+        );
+      }
+
+      return ListView(  //When you want a Column that scrolls
+        children:[
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Text('You have ${appState.favorites.length} favorites:'),
+          ),
+          for (var pair in appState.favorites)
+            ListTile(                          // ListTile has properties like title (generally for text), leading (for icons or avatars) and onTap (for interactions)
+              leading: Icon(Icons.favorite),
+              title: Text(pair.asLowerCase),
+            ),
+          
+        ],
+      );
+
+  }
+
 }
