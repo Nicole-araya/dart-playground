@@ -48,56 +48,114 @@ class MyAppState extends ChangeNotifier {
 
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {  // This class is private (_)
+  
+  var selectedIndex = 0;
+  
+  @override
+  Widget build(BuildContext context) {
+
+    Widget page;
+    switch (selectedIndex) {
+      case 0:
+        page = GeneratorPage();
+        break;
+      case 1:
+        page = Placeholder();
+        break;
+      default:
+        throw UnimplementedError('no widget for $selectedIndex');
+    }
+
+    return LayoutBuilder(               // LayoutBuilder's builder callback is called every time the constraints change. 
+      builder: (context, constraints) {
+        return Scaffold(
+          body: Row(
+            children: [
+              SafeArea(                   // Ensures that its child is not obscured by a hardware notch or a status bar.
+                child: NavigationRail(
+                  extended: constraints.maxWidth >= 600,      // If it true, shows the labels next to the icons. Or else, it only shows the icons.
+                  destinations: [
+                    NavigationRailDestination(
+                      icon: Icon(Icons.home),
+                      label: Text('Home'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.favorite),
+                      label: Text('Favorites'),
+                    ),
+                  ],
+                  selectedIndex: selectedIndex,                    // A selected index of zero selects the first destination,
+                  onDestinationSelected: (value) {   // this callback is called when the user taps on a destination.
+                    setState(() {                     // This is similar to notifyListeners() in MyAppState.
+                      selectedIndex = value;
+                    });
+                  },
+                ),
+              ),
+              Expanded(                    // Expanded widgets is that they are "greedy". The Expanded widget tells its child to fill the available space.
+                child: Container(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  child: page,
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    );
+  }
+}
+
+class GeneratorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var pair = appState.current;
 
     IconData icon;
-    if (appState.favorites.contains(pair)){
+    if (appState.favorites.contains(pair)) {
       icon = Icons.favorite;
     } else {
       icon = Icons.favorite_border;
     }
 
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-             
-            BigCard(pair: pair),
-            SizedBox(height: 10), // A SizedBox is a box with a specified size. Space between the BigCard and the button.
-            Row(
-              mainAxisSize: MainAxisSize.min, // To make the row only as wide as its children
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    appState.toggleFavorite();
-                  },
-                  icon: Icon(icon),
-                  label: Text('Like'),
-                ),
-                
-                SizedBox(width: 10), // Space between the two buttons
-
-                ElevatedButton(
-                  onPressed: () {
-                    appState.getNext();
-                  },
-                  child: Text('Next'),
-                ),
-                
-              ],
-            ),
-            
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BigCard(pair: pair),
+          SizedBox(height: 10),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  appState.toggleFavorite();
+                },
+                icon: Icon(icon),
+                label: Text('Like'),
+              ),
+              SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  appState.getNext();
+                },
+                child: Text('Next'),
+              ),
             ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
+
 
 class BigCard extends StatelessWidget {
   const BigCard({
